@@ -9,6 +9,9 @@
         .container { max-width: 1200px; margin: 20px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         header { text-align: center; padding-bottom: 20px; border-bottom: 2px solid #eee; }
         header h1 { color: #ff5722; }
+        .filters { text-align: center; margin-bottom: 20px; }
+        .filter-btn { padding: 8px 15px; margin: 0 5px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer; background-color: #fff; transition: background-color 0.3s; }
+        .filter-btn.active, .filter-btn:hover { background-color: #ff5722; color: #fff; border-color: #ff5722; }
         .quadrants-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px 0; }
         .quadrant { background-color: #f7f7f7; padding: 20px; border-radius: 8px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .quadrant:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
@@ -28,9 +31,18 @@
             <h1>Oportunidades Únicas no Mercado Livre!</h1>
             <p>Selecione a categoria que mais te interessa e encontre as melhores ofertas.</p>
         </header>
+        
+        <section class="filters">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="eletronicos">Eletrônicos</button>
+            <button class="filter-btn" data-filter="moda">Moda</button>
+            <button class="filter-btn" data-filter="brinquedos">Brinquedos</button>
+            <button class="filter-btn" data-filter="suplementos">Suplementos</button>
+            <button class="filter-btn" data-filter="artigos_esportivos">Artigos Esportivos</button>
+            <button class="filter-btn" data-filter="casa_e_decoracao">Casa e Decoração</button>
+        </section>
 
-        <section class="quadrants-section" id="quadrants-area">
-            </section>
+        <section class="quadrants-section" id="quadrants-area"></section>
         
         <footer>
             <p>Criado por Você | Afiliado do Mercado Livre</p>
@@ -38,34 +50,49 @@
     </div>
 
     <script>
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', (event) => {
+            carregarQuadrantes();
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelector('.filter-btn.active').classList.remove('active');
+                    button.classList.add('active');
+                    filterQuadrants(button.dataset.filter);
+                });
+            });
+        });
+        
+        function carregarQuadrantes() {
             const dadosSalvos = localStorage.getItem('dadosLoja');
             const quadrantsArea = document.getElementById('quadrants-area');
-
+            quadrantsArea.innerHTML = '';
+            
             if (dadosSalvos) {
                 const dados = JSON.parse(dadosSalvos);
-                
-                let html = '';
-                for (const key in dados) {
-                    const item = dados[key];
-                    if (item.link) { // Só cria o quadrante se o link existir
-                        html += `
-                            <div class="quadrant">
-                                <a href="${item.link}" target="_blank">
-                                    <img src="${item.imagem || 'https://via.placeholder.com/250x150.png?text=IMAGEM+AQUI'}" alt="${item.titulo}" class="quadrant-image">
-                                    <h3>${item.titulo}</h3>
-                                    <p class="preview-container"><span class="preview-text">${item.descricao}</span></p>
-                                    <span class="cta-button">Ver Ofertas</span>
-                                </a>
-                            </div>
-                        `;
-                    }
-                }
-                quadrantsArea.innerHTML = html;
+                dados.forEach(item => {
+                    const quadrantDiv = document.createElement('div');
+                    quadrantDiv.className = 'quadrant ' + (item.categoria || '');
+                    quadrantDiv.innerHTML = `
+                        <a href="${item.link}" target="_blank">
+                            <img src="${item.imagem || 'https://via.placeholder.com/250x150.png?text=IMAGEM+AQUI'}" alt="${item.titulo}" class="quadrant-image">
+                            <h3>${item.titulo}</h3>
+                            <p class="preview-container"><span class="preview-text">${item.descricao}</span></p>
+                            <span class="cta-button">Ver Ofertas</span>
+                        </a>
+                    `;
+                    quadrantsArea.appendChild(quadrantDiv);
+                });
             } else {
                 quadrantsArea.innerHTML = "<p style='text-align:center;'>Nenhum item adicionado ainda. Acesse a página de edição para começar.</p>";
             }
-        };
+        }
+        
+        function filterQuadrants(filter) {
+            const quadrantes = document.querySelectorAll('.quadrant');
+            quadrantes.forEach(quadrante => {
+                const categoria = quadrante.classList.contains(filter) || filter === 'all';
+                quadrante.style.display = categoria ? 'block' : 'none';
+            });
+        }
     </script>
 </body>
 </html>

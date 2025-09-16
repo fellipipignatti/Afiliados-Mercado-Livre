@@ -6,12 +6,12 @@
     <title>Painel de Edição</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f0f2f5; padding: 20px; }
-        .edit-container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .edit-container { max-width: 900px; margin: auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         .edit-container h2 { color: #ff5722; }
         .quadrant-editor { margin-bottom: 20px; border: 1px solid #eee; padding: 15px; border-radius: 6px; }
         .quadrant-editor label { display: block; margin-bottom: 5px; font-weight: bold; }
         .quadrant-editor input, .quadrant-editor textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        #salvarBtn { background-color: #28a745; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
+        #salvarBtn { background-color: #28a745; color: #fff; border: none; padding: 12px 25px; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background-color 0.3s; }
         #salvarBtn:hover { background-color: #218838; }
         .logout-btn { float: right; background-color: #dc3545; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
     </style>
@@ -21,7 +21,7 @@
     <div class="edit-container">
         <button class="logout-btn" onclick="window.location.href='login.html'">Sair</button>
         <h2>Painel de Edição dos Quadrantes</h2>
-        <p>Edite os links, títulos e descrições dos produtos abaixo.</p>
+        <p>Preencha os campos abaixo. Apenas os quadrantes com links serão exibidos na página principal.</p>
 
         <div class="quadrant-editor">
             <h3>Quadrante 1</h3>
@@ -51,38 +51,36 @@
     </div>
     
     <script>
+        const totalQuadrantes = 12; // Você pode aumentar este número
+        
         function salvarDados() {
-            const dados = {
-                quadrante1: {
-                    link: document.getElementById('link1').value,
-                    titulo: document.getElementById('titulo1').value,
-                    descricao: document.getElementById('descricao1').value,
-                    imagem: document.getElementById('imagem1').value,
-                },
-                quadrante2: {
-                    link: document.getElementById('link2').value,
-                    titulo: document.getElementById('titulo2').value,
-                    descricao: document.getElementById('descricao2').value,
-                    imagem: document.getElementById('imagem2').value,
-                }
-                // Adicione mais quadrantes aqui
-            };
+            const dados = {};
+            for (let i = 1; i <= totalQuadrantes; i++) {
+                dados[`quadrante${i}`] = {
+                    link: document.getElementById(`link${i}`).value,
+                    titulo: document.getElementById(`titulo${i}`).value,
+                    descricao: document.getElementById(`descricao${i}`).value,
+                    imagem: document.getElementById(`imagem${i}`).value,
+                };
+            }
             
             localStorage.setItem('dadosLoja', JSON.stringify(dados));
             alert("Informações salvas com sucesso!");
-            window.location.href = "index.html"; // Redireciona para a página principal
         }
 
-        // Carregar dados salvos ao abrir a página de edição
         window.onload = function() {
             const dadosSalvos = localStorage.getItem('dadosLoja');
             if (dadosSalvos) {
                 const dados = JSON.parse(dadosSalvos);
-                document.getElementById('link1').value = dados.quadrante1.link;
-                document.getElementById('titulo1').value = dados.quadrante1.titulo;
-                document.getElementById('descricao1').value = dados.quadrante1.descricao;
-                document.getElementById('imagem1').value = dados.quadrante1.imagem;
-                // Carregar dados dos outros quadrantes
+                for (let i = 1; i <= totalQuadrantes; i++) {
+                    const item = dados[`quadrante${i}`];
+                    if (item) {
+                        document.getElementById(`link${i}`).value = item.link;
+                        document.getElementById(`titulo${i}`).value = item.titulo;
+                        document.getElementById(`descricao${i}`).value = item.descricao;
+                        document.getElementById(`imagem${i}`).value = item.imagem;
+                    }
+                }
             }
         };
     </script>

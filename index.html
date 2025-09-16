@@ -52,7 +52,7 @@
                         html += `
                             <div class="quadrant">
                                 <a href="${item.link}" target="_blank">
-                                    <img src="${item.imagem}" alt="${item.titulo}" class="quadrant-image">
+                                    <img src="${item.imagem || 'https://via.placeholder.com/250x150.png?text=IMAGEM+AQUI'}" alt="${item.titulo}" class="quadrant-image">
                                     <h3>${item.titulo}</h3>
                                     <p class="preview-container"><span class="preview-text">${item.descricao}</span></p>
                                     <span class="cta-button">Ver Ofertas</span>

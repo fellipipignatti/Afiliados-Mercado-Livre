@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Edição</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; padding: 20px; }
+        .edit-container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .edit-container h2 { color: #ff5722; }
+        .quadrant-editor { margin-bottom: 20px; border: 1px solid #eee; padding: 15px; border-radius: 6px; }
+        .quadrant-editor label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .quadrant-editor input, .quadrant-editor textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        #salvarBtn { background-color: #28a745; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
+        #salvarBtn:hover { background-color: #218838; }
+        .logout-btn { float: right; background-color: #dc3545; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="edit-container">
+        <button class="logout-btn" onclick="window.location.href='login.html'">Sair</button>
+        <h2>Painel de Edição dos Quadrantes</h2>
+        <p>Edite os links, títulos e descrições dos produtos abaixo.</p>
+
+        <div class="quadrant-editor">
+            <h3>Quadrante 1</h3>
+            <label for="link1">Link do Mercado Livre:</label>
+            <input type="url" id="link1" placeholder="https://mercadolivre.com.br/link1">
+            <label for="titulo1">Título do Produto:</label>
+            <input type="text" id="titulo1" placeholder="Ex: Cadeira Gamer Profissional">
+            <label for="descricao1">Descrição Curta:</label>
+            <textarea id="descricao1" placeholder="Ex: Conforto e ergonomia para longas sessões de jogo." rows="2"></textarea>
+            <label for="imagem1">URL da Imagem:</label>
+            <input type="url" id="imagem1" placeholder="https://suaimagem.com/foto1.jpg">
+        </div>
+
+        <div class="quadrant-editor">
+            <h3>Quadrante 2</h3>
+            <label for="link2">Link do Mercado Livre:</label>
+            <input type="url" id="link2" placeholder="https://mercadolivre.com.br/link2">
+            <label for="titulo2">Título do Produto:</label>
+            <input type="text" id="titulo2" placeholder="Ex: Fone de Ouvido Bluetooth">
+            <label for="descricao2">Descrição Curta:</label>
+            <textarea id="descricao2" placeholder="Ex: Qualidade de som premium e bateria de longa duração." rows="2"></textarea>
+            <label for="imagem2">URL da Imagem:</label>
+            <input type="url" id="imagem2" placeholder="https://suaimagem.com/foto2.jpg">
+        </div>
+        
+        <button id="salvarBtn" onclick="salvarDados()">Salvar e Atualizar</button>
+    </div>
+    
+    <script>
+        function salvarDados() {
+            const dados = {
+                quadrante1: {
+                    link: document.getElementById('link1').value,
+                    titulo: document.getElementById('titulo1').value,
+                    descricao: document.getElementById('descricao1').value,
+                    imagem: document.getElementById('imagem1').value,
+                },
+                quadrante2: {
+                    link: document.getElementById('link2').value,
+                    titulo: document.getElementById('titulo2').value,
+                    descricao: document.getElementById('descricao2').value,
+                    imagem: document.getElementById('imagem2').value,
+                }
+                // Adicione mais quadrantes aqui
+            };
+            
+            localStorage.setItem('dadosLoja', JSON.stringify(dados));
+            alert("Informações salvas com sucesso!");
+            window.location.href = "index.html"; // Redireciona para a página principal
+        }
+
+        // Carregar dados salvos ao abrir a página de edição
+        window.onload = function() {
+            const dadosSalvos = localStorage.getItem('dadosLoja');
+            if (dadosSalvos) {
+                const dados = JSON.parse(dadosSalvos);
+                document.getElementById('link1').value = dados.quadrante1.link;
+                document.getElementById('titulo1').value = dados.quadrante1.titulo;
+                document.getElementById('descricao1').value = dados.quadrante1.descricao;
+                document.getElementById('imagem1').value = dados.quadrante1.imagem;
+                // Carregar dados dos outros quadrantes
+            }
+        };
+    </script>
+</body>
+</html>

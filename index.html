@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sua Loja de Ofertas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f2f5; color: #333; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        header { text-align: center; padding-bottom: 20px; border-bottom: 2px solid #eee; }
+        header h1 { color: #ff5722; }
+        .quadrants-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px 0; }
+        .quadrant { background-color: #f7f7f7; padding: 20px; border-radius: 8px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .quadrant:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .quadrant-image { width: 100%; height: 150px; object-fit: cover; border-radius: 6px; margin-bottom: 15px; }
+        .quadrant h3 { margin-top: 0; color: #555; }
+        .cta-button { display: inline-block; padding: 10px 20px; background-color: #ff5722; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 10px; transition: background-color 0.3s; }
+        .cta-button:hover { background-color: #e64a19; }
+        .preview-container { margin-top: 15px; color: #777; font-size: 12px; }
+        .preview-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        footer { text-align: center; padding: 20px 0; margin-top: 20px; border-top: 2px solid #eee; color: #999; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Oportunidades Únicas no Mercado Livre!</h1>
+            <p>Selecione a categoria que mais te interessa e encontre as melhores ofertas.</p>
+        </header>
+
+        <section class="quadrants-section" id="quadrants-area">
+            </section>
+        
+        <footer>
+            <p>Criado por Você | Afiliado do Mercado Livre</p>
+        </footer>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const dadosSalvos = localStorage.getItem('dadosLoja');
+            const quadrantsArea = document.getElementById('quadrants-area');
+
+            if (dadosSalvos) {
+                const dados = JSON.parse(dadosSalvos);
+                
+                let html = '';
+                for (const key in dados) {
+                    const item = dados[key];
+                    if (item.link) { // Só cria o quadrante se o link existir
+                        html += `
+                            <div class="quadrant">
+                                <a href="${item.link}" target="_blank">
+                                    <img src="${item.imagem}" alt="${item.titulo}" class="quadrant-image">
+                                    <h3>${item.titulo}</h3>
+                                    <p class="preview-container"><span class="preview-text">${item.descricao}</span></p>
+                                    <span class="cta-button">Ver Ofertas</span>
+                                </a>
+                            </div>
+                        `;
+                    }
+                }
+                quadrantsArea.innerHTML = html;
+            } else {
+                quadrantsArea.innerHTML = "<p style='text-align:center;'>Nenhum item adicionado ainda. Acesse a página de edição para começar.</p>";
+            }
+        };
+    </script>
+</body>
+</html>
